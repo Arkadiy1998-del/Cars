@@ -1,0 +1,51 @@
+CREATE SCHEMA IF NOT EXISTS data_lake;
+CREATE SCHEMA IF NOT EXISTS staging;
+CREATE SCHEMA IF NOT EXISTS core;
+
+-- создаём таблицы
+--BMW
+CREATE TABLE IF NOT EXISTS data_lake.BMW_Sales_Data
+(
+Purchase_date DATE,
+Year INT,
+Model TEXT,
+Revenue FLOAT,
+Quantity_Sold INT,
+Region TEXT,
+Country TEXT,
+Channel TEXT
+);
+
+--Hyundai
+CREATE TABLE IF NOT EXISTS data_lake.Hyundai_raw_data 
+(
+Car_id FLOAT,
+Purchase_Date DATE,
+Customer_Name TEXT,
+Customer_Gender TEXT,
+Customer_Country TEXT,
+Agent_Region TEXT,
+Customer_Age INT,
+Customer_Annual_Income($) INT,
+Company TEXT,
+Model TEXT,
+Engine TEXT,
+Transmission TEXT,
+Color TEXT,
+year_of_model INT,
+Price_($) FLOAT
+Agent_ID_ INT,
+Agent_Name_ INT,
+);
+
+--Lada
+CREATE TABLE IF NOT EXISTS data_lake.Lada
+(
+Purchase_Date DATE,
+Model TEXT,
+Region TEXT,
+Price INT,
+Engine_Power INT,
+Transmission INT,
+Fuel_Type TEXT
+)
