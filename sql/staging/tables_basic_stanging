@@ -8,7 +8,7 @@ DATE_PART('month',DATE("Purchase_Date")) AS month,
 SUM("Revenue") AS month_revenue,
 SUM("Quantity_Sold") AS month_qnt
 FROM data_lake.bmw_raw_data
-WHERE "Purchase_Date" IS NOT NULL
+WHERE "Purchase_Date" IS NOT NULL AND "Year" IN (2021, 2022, 2023) 
 GROUP BY 1,2,3,4,5,6
 ;
 CREATE TABLE IF NOT EXISTS staging.hyundai_data AS
@@ -19,7 +19,7 @@ SPLIT_PART("Customer_Country", ',', 1) AS country,
 SUM("Price_($)") AS revenue,
 COUNT(*) AS month_qnt
 FROM data_lake.hyundai_raw_data
-WHERE pg_input_is_valid("Purchase_Date", 'date') IS TRUE
+WHERE pg_input_is_valid("Purchase_Date", 'date') IS TRUE AND DATE_PART('year', DATE("Purchase_Date")) IN (2021,2022,2023)
 GROUP BY 1,2,3,4
 ;
 CREATE TABLE IF NOT EXISTS staging.lada_data AS
