@@ -1,2 +1,1 @@
-sql/raw/schema_creating
-CREATE SCHEMA IF NOT EXISTS data_lake;
+
