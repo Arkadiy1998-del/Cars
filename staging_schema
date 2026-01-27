@@ -1,3 +1,0 @@
-sql/raw/schema_creating
-CREATE SCHEMA IF NOT EXISTS staging;
-CREATE SCHEMA IF NOT EXISTS core;
