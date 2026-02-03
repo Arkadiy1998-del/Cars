@@ -1,0 +1,42 @@
+CREATE TABLE IF NOT EXISTS core.bmw_metrics AS
+(WITH base_agg AS (
+  SELECT year,
+  month,
+  model,
+  ROUND(SUM(month_revenue :: numeric/ 1000) , 1) AS month_revenue_1000,
+  SUM(month_qnt) AS total_qnty_sold,
+  FLOOR(SUM(month_revenue) / SUM(month_qnt)) AS avg_price
+FROM staging.bmw_data
+GROUP BY 1,2,3),
+
+add_year_rev AS (
+  SELECT *,
+  SUM(month_revenue_1000) OVER (PARTITION BY year) AS year_revenue_1000
+FROM base_agg
+),
+
+add_prev_val AS (
+  SELECT *,
+  ROUND(month_revenue_1000 - LAG(month_revenue_1000) OVER (PARTITION BY year, month ORDER BY year, month)) AS MoM_growth,
+  ROUND(year_revenue_1000 - LAG(year_revenue_1000) OVER (PARTITION BY year ORDER BY year)) AS YoY_growth
+  FROM add_year_rev
+),
+
+add_SMA_3m AS (
+  SELECT *,
+  ROUND(SUM(month_revenue_1000) OVER (PARTITION BY 1,2 ORDER BY 1,2 ROWS BETWEEN 3 PRECEDING AND CURRENT ROW), 1) AS SMA_3m
+  FROM add_prev_val
+),
+
+add_revenue_on_model AS (
+  SELECT *,
+  SUM(month_revenue_1000) OVER (PARTITION BY model) AS revenue_on_model,
+  SUM(total_qnty_sold) OVER (PARTITION BY model) AS total_model_qnt
+  FROM add_SMA_3m
+),
+
+add_sales_velocity AS (
+  SELECT *,
+  ROUND(SUM(total_qnty_sold) OVER (PARTITION BY model) :: numeric / 36, 1) AS sales_velocity
+  FROM add_revenue_on_model
+)
