@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS core.bmw_metrics AS
+CREATE TABLE IF NOT EXISTS core.bmw_internal_metrics AS
 (WITH base_agg AS (
   SELECT year,
   month,
