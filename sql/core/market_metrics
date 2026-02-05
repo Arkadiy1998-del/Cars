@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS market_metrics AS
+(SELECT year, month,
+total_revenue,
+total_qnt,
+ROUND((total_revenue / total_qnt) :: numeric, 1) AS total_avg_price,
+ROUND(((total_revenue - LAG(total_revenue) OVER(PARTITION BY month)) / LAG(total_revenue) OVER(PARTITION BY month) * 100) :: numeric, 1) AS total_MoM_growth_rel
+FROM
+(SELECT year, month, 
+SUM(month_revenue) AS total_revenue, 
+SUM(month_qnt) AS total_qnt
+FROM
+(SELECT year, month, SUM(month_revenue) AS month_revenue, SUM(month_qnt) AS month_qnt 
+FROM staging.bmw_data 
+GROUP BY 1,2
+UNION ALL
+SELECT year, month, SUM(revenue) AS month_revenue, SUM(month_qnt) AS month_qnt 
+FROM staging.hyundai_data
+GROUP BY 1,2
+UNION ALL
+SELECT year, month, SUM(revenue) AS month_revenue, SUM(month_qnt) AS month_qnt 
+FROM staging.lada_data
+GROUP BY 1,2) AS a
+GROUP BY 1,2
+ORDER BY 1,2) AS a1);
