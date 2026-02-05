@@ -40,3 +40,5 @@ add_sales_velocity AS (
   ROUND(SUM(total_qnty_sold) OVER (PARTITION BY model) :: numeric / 36, 1) AS sales_velocity
   FROM add_revenue_on_model
 )
+
+SELECT * FROM add_sales_velocity)
