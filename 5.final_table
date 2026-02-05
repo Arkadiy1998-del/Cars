@@ -1,0 +1,24 @@
+
+CREATE TABLE IF NOT EXISTS final_table AS (
+SELECT t.year, t.month,
+t.total_revenue         AS market_revenue,
+t.total_qnt             AS market_qnty_sold,
+t.total_avg_price       AS market_avg_price,
+t.total_MoM_growth_rel  AS market_MoM_growth,
+b.brand_renenue         AS bmw_revenue,
+b.brand_qnt_sold        AS bmw_qnty_sold,
+b.brand_avg_price       AS bmw_avg_price,
+b.brand_mom_growth_rel  AS bmw_MoM_growth,
+h.brand_renenue         AS hyundai_revenue,
+h.brand_qnt_sold        AS hyundai_qnty_sold,
+h.brand_avg_price       AS hyundai_avg_price,
+h.brand_mom_growth_rel  AS hyundai_MoM_growth,
+l.brand_renenue         AS lada_revenue,
+l.brand_qnt_sold        AS lada_qnty_sold,
+l.brand_avg_price       AS lada_avg_price,
+l.brand_mom_growth_rel  AS lada_MoM_growth_rel
+FROM core.market_metrics AS t
+JOIN core.bmw_ext_metrics AS b      USING (year, month)
+JOIN core.hyundai_ext_metrics AS h  USING (year, month)
+JOIN core.lada_ext_metrics AS l     USING (year,month)
+)
