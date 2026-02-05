@@ -65,11 +65,11 @@ src);
 END;
 $$;
 
-CREATE TABLE IF NOT EXISTS core.bmw_internal_metrics AS
+CREATE TABLE IF NOT EXISTS core.bmw_int_metrics AS
 (SELECT * FROM calc_int_metrics('staging.bmw_data'));
 
-CREATE TABLE core.hyundai_internal_metrics AS
+CREATE TABLE core.hyundai_int_metrics AS
 (SELECT * FROM calc_int_metrics('staging.hyundai_data'));
 
-CREATE TABLE core.lada_internal_metrics AS
+CREATE TABLE core.lada_int_metrics AS
 (SELECT * FROM calc_int_metrics('staging.lada_data'))
