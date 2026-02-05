@@ -1,0 +1,36 @@
+CREATE FUNCTION calc_ext_metrics(src regclass)
+RETURNS TABLE(
+  year                  numeric,
+  month                 numeric,
+  brand_renenue         numeric,
+  brand_qnt_sold        numeric,
+  brand_avg_price       numeric,
+  brand_MoM_growth_rel  numeric
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  RETURN QUERY EXECUTE FORMAT(
+    '
+  SELECT year, 
+  month, 
+  brand_revenue, 
+  brand_qnt_sold, 
+  ROUND((brand_revenue / brand_qnt_sold) :: numeric, 1) AS brand_avg_price,
+  ROUND(((brand_revenue - LAG(brand_revenue) OVER(PARTITION BY month)) / LAG(brand_revenue) OVER(PARTITION BY month) * 100) :: numeric, 1) AS brand_MoM_growth_rel
+  FROM
+  (SELECT year, month, SUM(revenue) AS brand_revenue, SUM(month_qnt) AS brand_qnt_sold 
+  FROM %s
+  GROUP BY 1,2)
+  ', src);
+  END;
+  $$;
+
+CREATE TABLE IF NOT EXISTS core.bmw_ext_metrics AS
+(SELECT * FROM calc_ext_metrics('staging.bmw_data'));
+
+CREATE TABLE IF NOT EXISTS core.bmw_ext_metrics AS
+(SELECT * FROM calc_ext_metrics('staging.hyundai_data'));
+
+CREATE TABLE IF NOT EXISTS core.bmw_ext_metrics AS
+(SELECT * FROM calc_ext_metrics('staging.lada_data'));
