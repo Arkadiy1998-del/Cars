@@ -1,5 +1,5 @@
 
-CREATE TABLE IF NOT EXISTS final_table AS (
+CREATE TABLE IF NOT EXISTS core.final_table AS (
 SELECT t.year, t.month,
 t.total_revenue         AS market_revenue,
 t.total_qnt             AS market_qnty_sold,
