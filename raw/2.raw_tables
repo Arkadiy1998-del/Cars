@@ -1,4 +1,4 @@
--- создаём таблицы
+-- create empty tables
 --BMW
 CREATE TABLE IF NOT EXISTS data_lake.BMW_Sales_Data
 (
